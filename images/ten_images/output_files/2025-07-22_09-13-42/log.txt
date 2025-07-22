@@ -1,0 +1,10 @@
+2025-07-22 09:14:18,157 - INFO - Saved into: /home/gaps-canteras-u22/Documents/repos/vggt-tfm/images/ten_images/output_files/2025-07-22_09-13-42
+2025-07-22 09:14:18,157 - INFO - Total Frames: 10
+2025-07-22 09:14:18,157 - INFO - Number of Datasets: 10
+2025-07-22 09:14:18,158 - INFO - Selected Frames: 00000001,00000131,00000261,00000391,00000521,00000651,00000781,00000911,00001041,00001266
+2025-07-22 09:14:18,158 - INFO - Confidence threshold: 60.0
+2025-07-22 09:14:18,158 - INFO - Elapsed time for reconstruction: 2.0285818576812744
+2025-07-22 09:14:18,158 - INFO - Memory Change (Allocated MB): 43.0
+2025-07-22 09:14:18,158 - INFO - Memory Change (Reserved MB): 7836.0
+2025-07-22 09:14:18,158 - INFO - Reconstruction completed.
+

@@ -18,7 +18,57 @@ from vggt.models.vggt import VGGT
 from vggt.utils.load_fn import load_and_preprocess_images
 from vggt.utils.pose_enc import pose_encoding_to_extri_intri
 from vggt.utils.geometry import unproject_depth_map_to_point_map
-from external_scripts.vgg_utils import * 
+
+import math 
+import random 
+import re 
+
+def log_reconstructions(info:dict): 
+
+    for key,value in info.items(): 
+        logging.info(f"{key}: {value}")
+    logging.info("Reconstruction completed.\n")
+
+def extract_frame_numbers(frame_paths):
+    """Extracts the frame number from the file path."""
+    variations = ["frame", "img"] 
+    for var in variations:  
+        frame_numbers = []
+        for frame in frame_paths:
+            match = re.search(rf"{var}_(\d+)\.jpg", os.path.basename(frame))
+            if match:
+                frame_numbers.append(match.group(1))
+        if frame_numbers:
+            break
+    return frame_numbers
+
+def get_gpu_memory_usage():
+    """Returns the GPU memory usage in MB for the current PyTorch device."""
+    if torch.cuda.is_available():
+        mem_allocated = torch.cuda.memory_allocated() / 1024**2  # MB
+        mem_reserved = torch.cuda.memory_reserved() / 1024**2  # MB
+        return mem_allocated, mem_reserved  
+    else:
+        return 0, 0  
+
+
+
+def split_and_sample_frames(folder_path: str, number_datasets: int) -> list[str]:
+    """
+    from the dataset, split it in number_frames datasets and select a random frame from each of the subdatasets. 
+    """
+
+    all_frames = sorted([os.path.join(folder_path, f) for f in os.listdir(folder_path) if f.endswith(('.jpg', '.png', '.jpeg'))])
+
+    # Compute the size of each subdataset
+    total_frames = len(all_frames)
+    subset_size = math.ceil(total_frames / number_datasets)  # Round up to ensure all frames are included
+
+    subdatasets = [all_frames[i * subset_size : (i + 1) * subset_size] for i in range(number_datasets)]
+    selected_frames = [random.choice(subset) for subset in subdatasets if subset]
+
+    return selected_frames
+
 
 def load_model(device=None):
     """Load and initialize the VGGT model."""
